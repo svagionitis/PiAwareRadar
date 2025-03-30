@@ -127,4 +127,3 @@ if __name__ == "__main__":
 
         #refresh the flight data
         myflights.refresh()
-

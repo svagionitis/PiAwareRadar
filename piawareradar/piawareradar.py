@@ -105,7 +105,7 @@ pygame.draw.line(screen, GREEN,
 scale_text = myfont.render(calc_scale_km(scale, SCALELINERECT[2]), 1, GREEN)
 screen.blit(scale_text, (SCALETEXTRECT[0], SCALETEXTRECT[1]))
 
-#title 
+#title
 title = myfont.render("PiAware Radar", 1, GREEN)
 screen.blit(title, TITLEPOS)
 sac = myfont.render("stuffaboutcode.com", 1, GREEN)
@@ -131,19 +131,19 @@ aircraft_data = aggregator.get_all_aircraft()
 done = False
 next_refresh = pygame.time.get_ticks()
 while not done:
-    
+
     #should the flights be refreshed
     if pygame.time.get_ticks() > next_refresh:
 
         #keep a track of the last aircraft we saw
         lastaircraftseen = deepcopy(myflights.aircraft)
-        
+
         #loop through all the flights and update them
         for aircraft in myflights.aircraft:
             if aircraft.validposition:
                 x, y = lat_lon_to_x_y(aircraft.lat, aircraft.lon)
                 radar.dot_add(aircraft.hex, x, y, data = aircraft)
-        
+
         next_refresh += FLIGHTDATAREFRESH
         myflights.refresh()
 
@@ -157,14 +157,14 @@ while not done:
         #quit
         if event.type == pygame.QUIT:
             done = True
-            
+
         #mouse press
         if event.type == pygame.MOUSEBUTTONDOWN:
             mousepos = pygame.mouse.get_pos()
             #close button
             if close_rect.collidepoint(mousepos):
                 done = True
-            
+
             #scale buttons
             if scale_plus_rect.collidepoint(mousepos):
                 scale = scale * 2
@@ -172,14 +172,14 @@ while not done:
                 scale_text = myfont.render(calc_scale_km(scale, SCALELINERECT[2]), 1, GREEN)
                 screen.blit(scale_text, (SCALETEXTRECT[0], SCALETEXTRECT[1]))
                 radar.set_scale(scale)
-                
+
             if scale_neg_rect.collidepoint(mousepos):
                 scale = scale * 0.5
                 pygame.draw.rect(screen, BLACK, SCALETEXTRECT, 0)
                 scale_text = myfont.render(calc_scale_km(scale, SCALELINERECT[2]), 1, GREEN)
                 screen.blit(scale_text, (SCALETEXTRECT[0], SCALETEXTRECT[1]))
                 radar.set_scale(scale)
-                
+
             #dot clicked
             dot_found = radar.dot_at_point(mousepos)
             if dot_found != None:

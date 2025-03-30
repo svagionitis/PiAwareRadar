@@ -19,7 +19,7 @@ BLACK = (0, 0, 0)
 GREEN = (0, 255, 0)
 
 class Radar(threading.Thread):
-    
+
     def __init__(self, screen, radar_rect, radar_pos = (0, 0), scale = 1,
                  back_col = BLACK, radar_col = GREEN):
 
@@ -36,7 +36,7 @@ class Radar(threading.Thread):
 
         self.back_col = back_col
         self.radar_col = radar_col
-        
+
         self.running = False
         self.stopped = True
 
@@ -51,7 +51,7 @@ class Radar(threading.Thread):
         #TODO - set the back of the radar to the back colour
 
         while not self.stopped:
-        
+
             # Calculate the x,y for the end point of our 'sweep' based on the current angle
             x = self.centre[0] + math.sin(angle) * self.sweeplen
             y = self.centre[1] + math.cos(angle) * self.sweeplen
@@ -60,7 +60,7 @@ class Radar(threading.Thread):
             pygame.draw.line(self.screen, self.radar_col, [self.centre[0], self.centre[1]], [x, y], 2)
 
             self._display_dots_on_line(self.centre[0], self.centre[1], x, y)
-            
+
             # Draw the outline of a circle to 'sweep' the line around
             pygame.draw.ellipse(self.screen, self.radar_col, self.radar_rect, 2)
 
@@ -96,12 +96,12 @@ class Radar(threading.Thread):
         if dot_col == None: dot_col = self.radar_col
         #work out x, y on screen
         screen_x, screen_y = self._calc_screen_x_y(x, y)
-        
+
         #does the dot already exist?
         if dot_id in self.dots:
             dot = self.dots[dot_id]
             dot.move(screen_x, screen_y)
-        else:                
+        else:
             dot = RadarDot(self.screen, screen_x, screen_y, 10, data = data, back_col = back_col, dot_col = dot_col)
             self.dots[dot_id] = dot
 
@@ -141,29 +141,29 @@ class Radar(threading.Thread):
         self.scale = new_scale
         for key, dot in self.dots.copy().items():
             self.dot_move(key, dot.x, dot.y)
-            
+
 
 class RadarDot():
- 
+
     def __init__(self, screen, x, y, radius,
                  back_col = BLACK, dot_col = GREEN,
                  fade_time = 4000, no_of_fade_steps = 100, data = None):
-        
+
         self.screen = screen
-        
+
         self.radius = radius
         self.move(x, y)
-        
+
         self.back_col = back_col
         self.dot_col = dot_col
-        
+
         self.fade_time = fade_time
         self.no_of_fade_steps = no_of_fade_steps
         self.fade_step = 0
         self.fade_running = False
 
         self.data = data
-        
+
     def show(self):
         #if the fade is running
         if self.fade_running:
@@ -173,7 +173,7 @@ class RadarDot():
             #start the fade again
             self.fade_thread = threading.Thread(target = self._fade)
             self.fade_thread.start()
-        
+
     def _fade(self):
         #calc fade steps
         fade_steps = self._calc_fade(self.dot_col, self.back_col, self.no_of_fade_steps)
@@ -186,13 +186,13 @@ class RadarDot():
 
         #keep fading the dot until its the back col or its stopped
         while self.fade_step < (len(fade_steps) - 1) and self.fade_running == True:
-            
+
             #where am i drawing the dot this time?
             lastx, lasty = self.x, self.y
             pygame.draw.ellipse(self.screen,
                                 fade_steps[self.fade_step],
                                 (lastx - self.radius, lasty - self.radius, self.radius, self.radius), 0)
-            
+
             #pygame.display.update()
 
             #wait until the next time or the fade is stopped
@@ -200,7 +200,7 @@ class RadarDot():
             while till > pygame.time.get_ticks() and self.fade_running == True:
                 pygame.time.wait(10)
             now = till
-            
+
             #draw over the last ellipse in black
             pygame.draw.ellipse(self.screen,
                                 self.back_col,
@@ -210,7 +210,7 @@ class RadarDot():
 
         self.fade_running = False
         #pygame.display.update()
-        
+
 
     def move(self, x, y):
         self.x = x
@@ -219,7 +219,7 @@ class RadarDot():
 
     def move_by(self, x, y):
         self.move(self.x + x, self.y + y)
-        
+
     def _calc_fade(self, start_rgb, end_rgb, steps):
         #work out the number of colours and steps
         r_step = (end_rgb[0] - start_rgb[0]) / steps
@@ -288,7 +288,7 @@ if __name__ == "__main__":
     radar.dot_add(1, -200, -200)
     radar.dot_add(2, 200, 200)
     radar.dot_add(3, -200, 250)
-    
+
     # Loop until the user clicks the close button.
     done = False
 
