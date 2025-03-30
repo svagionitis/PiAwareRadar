@@ -13,6 +13,7 @@ from gpsutils import GPSUtils
 from flightdata import FlightData
 from copy import deepcopy
 from threading import Timer
+from fetchers import AircraftDataAggregator
 
 def lat_lon_to_x_y(lat, lon):
     x, y = GPSUtils.lat_lon_to_x_y(lat, lon)
@@ -122,6 +123,10 @@ radar.start()
 
 #get the flight data
 myflights = FlightData(data_url = piaware_url)
+
+# setup the aircraft data aggregator
+aggregator = AircraftDataAggregator()
+aircraft_data = aggregator.get_all_aircraft()
 
 done = False
 next_refresh = pygame.time.get_ticks()
